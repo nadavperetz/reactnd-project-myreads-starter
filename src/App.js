@@ -1,20 +1,8 @@
 import React from 'react'
-import * as BooksAPI from './BooksAPI'
 import './App.css'
 import BookList from './BookList'
 
 class BooksApp extends React.Component {
-    state = {
-        books : []
-    }
-
-    componentDidMount() {
-        BooksAPI.getAll().then((books) => {
-            console.log(books);
-                this.setState({books: books})
-            }
-        )
-    }
 
     render() {
         return (
@@ -23,7 +11,7 @@ class BooksApp extends React.Component {
                     <div className="list-books-title">
                         <h1>MyReads</h1>
                     </div>
-                    <BookList books={this.state.books} />
+                    <BookList />
                 </div>
             </div>
         )
