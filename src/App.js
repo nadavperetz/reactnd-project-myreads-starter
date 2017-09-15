@@ -3,6 +3,7 @@ import {Route} from 'react-router-dom'
 
 import './App.css'
 import BookList from './Books/BookList'
+import SearchBooks from './Books/SearchBooks'
 
 class BooksApp extends React.Component {
 
@@ -12,10 +13,12 @@ class BooksApp extends React.Component {
                     <Route exact path="/" render={() => (
                         <BookList />)
                     }/>
+                    <Route exact path="/search" render={() => (
+                        <SearchBooks />)
+                    }/>
 
             </div>
-        )
-    }
+        )}
 }
 
 export default BooksApp

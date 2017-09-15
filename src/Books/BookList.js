@@ -12,23 +12,21 @@ class BookList extends Component {
 
     componentDidMount() {
         BooksAPI.getAll().then((books) => {
-                console.log(books);
-                this.setState({books: books})
-            }
-        )
+            console.log(books);
+            this.setState({books: books})
+        })
     }
 
     changeShelf = (book, new_shelf) => {
         BooksAPI.update(book, new_shelf).then((data) => {
-                let old_books = this.state.books;
-                console.log(old_books);
-                const idx = (old_books.findIndex((old_book) => old_book.id = book.id) - 1);
-                book.shelf = new_shelf;
-                old_books[idx] = book;
-                this.setState({books: old_books}
-                )
-            }
-        )
+            let old_books = this.state.books;
+            console.log(old_books);
+            const idx = (old_books.findIndex((old_book) => old_book.id = book.id) - 1);
+            book.shelf = new_shelf;
+            old_books[idx] = book;
+            this.setState({books: old_books}
+            )
+        })
     };
 
 
