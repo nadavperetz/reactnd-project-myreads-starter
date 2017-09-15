@@ -18,11 +18,7 @@ class SearchBooks extends Component{
 
     changeShelf = (book, new_shelf) => {
         BooksAPI.update(book, new_shelf).then((data) => {
-            let old_books = this.state.books;
-            const idx = (old_books.findIndex((old_book) => old_book.id = book.id) - 1);
-            book.shelf = new_shelf;
-            old_books.pop(idx);
-            this.setState({books: old_books}
+            this.setState({books: this.state.books.filter((b) => b.id !== book.id)}
             )
         })
     };
