@@ -7,13 +7,24 @@ import sortBy from 'sort-by'
 class SearchBooks extends Component{
 
     state = {
-        query: '',
-        books: []
+        books: [],
+        async_running: false
     };
-    updateQuery = (query) => {
-        this.setState({query : query.trim()});
-        BooksAPI.search(query, 10).then((books) =>
-            this.setState({books : books}))
+
+    inputKeyPressEvent = (event) => {
+        let query = event.target.value;
+        if (query && !this.state.async_running && (event.key === 'Enter')) {
+            this.setState({async_running : true});
+            BooksAPI.search(query, 10).then((data) => {
+                if (data.error === "empty query"){
+                    this.setState({async_running: false, books:[]})
+                }
+                else {
+                    data.sort(sortBy('name'));
+                    this.setState({books: data, async_running: false})
+                }
+            })
+        }
     };
 
     changeShelf = (book, new_shelf) => {
@@ -24,8 +35,7 @@ class SearchBooks extends Component{
     };
 
     render() {
-        const {books, query} = this.state;
-        books.sort(sortBy('name'));
+        const {books} = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -34,8 +44,7 @@ class SearchBooks extends Component{
                     <div className="search-books-input-wrapper">
                         <input type="text"
                                placeholder="Search by title or author"
-                               value={query}
-                               onChange={(event) => this.updateQuery(event.target.value)}
+                               onKeyPress={(event) => this.inputKeyPressEvent(event)}
                         />
                     </div>
                 </div>
