@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
+import Spinner from '../Animation/Spinner'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 import sortBy from 'sort-by'
 
-class SearchBooks extends Component{
+class SearchBooks extends Component {
 
     state = {
         books: [],
@@ -14,10 +15,10 @@ class SearchBooks extends Component{
     inputKeyPressEvent = (event) => {
         let query = event.target.value;
         if (query && !this.state.async_running && (event.key === 'Enter')) {
-            this.setState({async_running : true});
+            this.setState({async_running: true});
             BooksAPI.search(query, 10).then((data) => {
-                if (data.error === "empty query"){
-                    this.setState({async_running: false, books:[]})
+                if (data.error === "empty query") {
+                    this.setState({async_running: false, books: []})
                 }
                 else {
                     data.sort(sortBy('name'));
@@ -35,7 +36,7 @@ class SearchBooks extends Component{
     };
 
     render() {
-        const {books} = this.state;
+        const {books, async_running} = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -49,11 +50,15 @@ class SearchBooks extends Component{
                     </div>
                 </div>
                 <div className="search-books-results">
-                    <ol className="books-grid">
-                        {books.map((book) =>
-                            <Book key={book.id} book={book} changeShelf={this.changeShelf}/>)
-                        }
-                    </ol>
+                    {async_running ?
+                        <Spinner/>
+                        :
+                        <ol className="books-grid">
+                            {books.map((book) =>
+                                <Book key={book.id} book={book} changeShelf={this.changeShelf}/>)
+                            }
+                        </ol>
+                    }
                 </div>
             </div>
         )
