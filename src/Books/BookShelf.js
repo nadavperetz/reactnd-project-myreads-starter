@@ -22,7 +22,10 @@ class BookShelf extends Component{
                     {books.length > 0 ?
                         <ol className="books-grid">
                             {books.map((book) =>
-                                <Book key={book.id} book={book} changeShelf={changeShelf}/>)}
+                                <Book key={book.id}
+                                      book={book}
+                                      changeShelf={changeShelf}
+                                />)}
                         </ol>
                         :
                         <Spinner/>

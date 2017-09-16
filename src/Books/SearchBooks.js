@@ -9,7 +9,9 @@ class SearchBooks extends Component {
 
     state = {
         books: [],
-        async_running: false
+        clicked_books: [],
+        async_running: false,
+        any_clicked: false
     };
 
     inputKeyPressEvent = (event) => {
@@ -35,8 +37,48 @@ class SearchBooks extends Component {
         })
     };
 
+    changeBatchSelectionShelf = () => {
+
+    }
+
+
+    bookClicked = (book) => {
+        if (book.hasOwnProperty('clicked')){
+            book.clicked = !book.clicked;
+        }
+        else{
+            book.clicked = true;
+        }
+
+        let clicked_books = this.state.clicked_books;
+        let idx = clicked_books.findIndex(each_book => each_book.id === book.id);
+
+        if (idx >= 0) {
+            clicked_books.splice(idx, 1);
+        }
+        else{
+            clicked_books.push(book);
+        }
+        if (clicked_books.length > 0)
+            this.setState(
+                {
+                    any_clicked: true,
+                    clicked_books: clicked_books
+                }
+            );
+
+        else
+            this.setState(
+                {
+                    any_clicked: false,
+                    clicked_books: clicked_books
+                }
+            );
+
+    };
+
     render() {
-        const {books, async_running} = this.state;
+        const {books, async_running, any_clicked} = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -55,9 +97,24 @@ class SearchBooks extends Component {
                         :
                         <ol className="books-grid">
                             {books.map((book) =>
-                                <Book key={book.id} book={book} changeShelf={this.changeShelf}/>)
+                                <Book key={book.id}
+                                      book={book}
+                                      changeShelf={this.changeShelf}
+                                      any_clicked={any_clicked}
+                                      bookClicked={this.bookClicked}
+                                />)
                             }
                         </ol>
+                    }
+                    {(any_clicked && !async_running) &&
+                    <div className="move-on-batch">
+                        <select onChange={this.changeBatchSelectionShelf} value='none'>
+                            <option value="none" disabled>Move to...</option>
+                            <option value="currentlyReading">Currently Reading</option>
+                            <option value="wantToRead">Want to Read</option>
+                            <option value="read">Read</option>
+                        </select>
+                    </div>
                     }
                 </div>
             </div>

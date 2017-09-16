@@ -4,12 +4,14 @@ import PropTypes from 'prop-types'
 class Book extends Component{
 
     state = {
-        shelf : this.props.book.shelf
+        shelf : this.props.book.shelf,
     };
 
     static propTypes = {
         book : PropTypes.object.isRequired,
         changeShelf : PropTypes.func.isRequired,
+        any_clicked : PropTypes.bool.isRequired,
+        bookClicked : PropTypes.func.isRequired,
     };
 
     changeSelectionShelf = (e) => {
@@ -19,17 +21,35 @@ class Book extends Component{
 
     };
 
+    isClicked = () => {
+        let clicked;
+        if (this.props.book.hasOwnProperty('clicked')){
+            clicked = this.props.book.clicked;
+        }
+        else{
+            clicked = false;
+        }
+        console.log(clicked);
+        return clicked;
+    };
+
+    onBookClicked = () => {
+        this.props.bookClicked(this.props.book);
+    };
+
     render() {
-        const {book} = this.props;
+        const {book, any_clicked} = this.props;
         const {shelf} = this.state;
+        const bookClassName = this.isClicked() ? 'book-cover-clicked' : 'book-cover';
         return (
             <li>
-                <div className="book">
+                <div className='book'>
                     <div className="book-top">
-                        <div className="book-cover" style={{ width: 128, height: 193,
-                                                            backgroundImage: `url("${book.imageLinks.smallThumbnail}")` }}>
+                        <div className={bookClassName}  onClick={this.onBookClicked} style={{ width: 128, height: 193,
+                            backgroundImage: `url("${book.imageLinks.smallThumbnail}")` }}>
 
                         </div>
+                        {!any_clicked &&
                         <div className="book-shelf-changer">
                             <select onChange={this.changeSelectionShelf} value={shelf}>
                                 <option value="none" disabled>Move to...</option>
@@ -38,6 +58,7 @@ class Book extends Component{
                                 <option value="read">Read</option>
                             </select>
                         </div>
+                        }
                     </div>
                     <div className="book-title">{book.title}</div>
                     <div className="book-authors">{book.authors}</div>
