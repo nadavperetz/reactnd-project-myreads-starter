@@ -5,6 +5,7 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-router-dom": "latest",
+    "react-tabs": "^2.0.0",
     "sort-by": "^1.2.0"
   },
   "devDependencies": {

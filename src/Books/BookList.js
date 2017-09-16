@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
+
 import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
+
+import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import sortBy from 'sort-by'
 
 class BookList extends Component {
@@ -39,16 +42,26 @@ class BookList extends Component {
                     <h1>MyReads</h1>
                 </div>
                 <div className="list-books-content">
-                    <BookShelf books={books.filter((book) => book.shelf === 'currentlyReading')}
-                               changeShelf={this.changeShelf}
-                               shelfName='Currently Reading'/>
-                    <BookShelf books={books.filter((book) => book.shelf === 'wantToRead')}
-                               changeShelf={this.changeShelf}
-                               shelfName='Want to Read'/>
-                    <BookShelf books={books.filter((book) => book.shelf === 'read')}
-                               changeShelf={this.changeShelf}
-                               shelfName='Read'/>
+                    <Tabs>
+                        <TabList>
+                            <Tab>Currently Reading</Tab>
+                            <Tab>Want to Read</Tab>
+                            <Tab>Read</Tab>
+                        </TabList>
 
+                        <TabPanel>
+                            <BookShelf books={books.filter((book) => book.shelf === 'currentlyReading')}
+                                       changeShelf={this.changeShelf}/>
+                        </TabPanel>
+                        <TabPanel>
+                            <BookShelf books={books.filter((book) => book.shelf === 'wantToRead')}
+                                       changeShelf={this.changeShelf}/>
+                        </TabPanel>
+                        <TabPanel>
+                            <BookShelf books={books.filter((book) => book.shelf === 'read')}
+                                       changeShelf={this.changeShelf}/>
+                        </TabPanel>
+                    </Tabs>
                 </div>
                 <div className="open-search">
                     <Link to="/search">Add a book</Link>

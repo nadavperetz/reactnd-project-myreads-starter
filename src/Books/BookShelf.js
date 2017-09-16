@@ -11,7 +11,6 @@ class BookShelf extends Component{
 
     static propTypes = {
         books : PropTypes.object.isRequired,
-        shelfName:  PropTypes.string.isRequired,
         changeShelf:  PropTypes.func.isRequired
     };
 
@@ -19,7 +18,6 @@ class BookShelf extends Component{
         const {books, shelfName, changeShelf} = this.props;
         return (
             <div className="bookshelf">
-                <h2 className="bookshelf-title">{shelfName}</h2>
                 <div className="bookshelf-books">
                     {books.length > 0 ?
                         <ol className="books-grid">
