@@ -272,15 +272,15 @@ div.tab button.active {
 
 .react-tabs [role=tab][aria-selected=true] {
     background: #fff;
-    border-color: #2e7c31;;
+    border-color: #2e7c31;
     border-radius: 5px 5px 0 0;
     -moz-border-radius: 5px 5px 0 0;
     -webkit-border-radius: 5px 5px 0 0;
 }
 
 .react-tabs [role=tab]:focus {
-    box-shadow: 0 0 5px hsl(208, 99%, 50%);
-    border-color: hsl(208, 99%, 50%);
+    box-shadow: 0 0 5px #2e7c31;
+    border-color: #2e7c31;
     outline: none;
 }
 
