@@ -9,76 +9,73 @@ class SearchBooks extends Component {
 
     state = {
         books: [],
-        clicked_books: [],
-        async_running: false,
-        any_clicked: false
+        clickedBooks: [],
+        asyncRunning: false,
+        anyClicked: false
     };
 
     inputKeyPressEvent = (event) => {
         let query = event.target.value;
-        if (query && !this.state.async_running && (event.key === 'Enter')) {
-            this.setState({async_running: true});
+        if (query && !this.state.asyncRunning && (event.key === 'Enter')) {
+            this.setState({asyncRunning: true});
             BooksAPI.search(query, 10).then((data) => {
                 if (data.error === "empty query") {
-                    this.setState({async_running: false, books: []})
+                    this.setState({asyncRunning: false, books: []})
                 }
                 else {
                     data.sort(sortBy('name'));
-                    this.setState({books: data, async_running: false})
+                    this.setState({books: data, asyncRunning: false})
                 }
             })
         }
     };
 
-    changeShelf = (book, new_shelf) => {
-        BooksAPI.update(book, new_shelf).then((data) => {
+    changeShelf = (book, newShelf) => {
+        BooksAPI.update(book, newShelf).then( () => {
             this.setState({books: this.state.books.filter((b) => b.id !== book.id)}
             )
         })
     };
 
-    changeBatchSelectionShelf = () => {
-
-    }
+    changeBatchSelectionShelf = (e) => {
+        const newShelf = e.target.value;
+        this.setState({asyncRunning: true});
+        for (let clickedBook of this.state.clickedBooks) {
+            this.changeShelf(clickedBook, newShelf)
+        }
+        this.setState({asyncRunning: false});
+    };
 
 
     bookClicked = (book) => {
-        if (book.hasOwnProperty('clicked')){
-            book.clicked = !book.clicked;
-        }
-        else{
-            book.clicked = true;
-        }
+        book.clicked =  (book.hasOwnProperty('clicked') ? !book.clicked : true) ;
 
-        let clicked_books = this.state.clicked_books;
-        let idx = clicked_books.findIndex(each_book => each_book.id === book.id);
+        let clickedBooks = this.state.clickedBooks;
+        let idx = clickedBooks.findIndex(eachBook => eachBook.id === book.id);
 
-        if (idx >= 0) {
-            clicked_books.splice(idx, 1);
-        }
-        else{
-            clicked_books.push(book);
-        }
-        if (clicked_books.length > 0)
+        (idx >= 0) ? clickedBooks.splice(idx, 1) : clickedBooks.push(book);
+
+        if (clickedBooks.length > 0)
             this.setState(
                 {
-                    any_clicked: true,
-                    clicked_books: clicked_books
+                    anyClicked: true,
+                    clickedBooks: clickedBooks
                 }
             );
 
         else
             this.setState(
                 {
-                    any_clicked: false,
-                    clicked_books: clicked_books
+                    anyClicked: false,
+                    clickedBooks: clickedBooks
                 }
             );
 
     };
 
     render() {
-        const {books, async_running, any_clicked} = this.state;
+        const {books, asyncRunning, anyClicked} = this.state;
+        console.log(asyncRunning);
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -86,13 +83,13 @@ class SearchBooks extends Component {
                     <Link to="/" className="close-search">Close</Link>
                     <div className="search-books-input-wrapper">
                         <input type="text"
-                               placeholder="Search by title or author"
+                               placeholder="Type title or author and press enter"
                                onKeyPress={(event) => this.inputKeyPressEvent(event)}
                         />
                     </div>
                 </div>
                 <div className="search-books-results">
-                    {async_running ?
+                    {asyncRunning ?
                         <Spinner/>
                         :
                         <ol className="books-grid">
@@ -100,16 +97,16 @@ class SearchBooks extends Component {
                                 <Book key={book.id}
                                       book={book}
                                       changeShelf={this.changeShelf}
-                                      any_clicked={any_clicked}
+                                      anyClicked={anyClicked}
                                       bookClicked={this.bookClicked}
                                 />)
                             }
                         </ol>
                     }
-                    {(any_clicked && !async_running) &&
+                    {(anyClicked && !asyncRunning) &&
                     <div className="move-on-batch">
                         <select onChange={this.changeBatchSelectionShelf} value='none'>
-                            <option value="none" disabled>Move to...</option>
+                            <option value="none" disabled> </option>
                             <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>
                             <option value="read">Read</option>

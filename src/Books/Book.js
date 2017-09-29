@@ -10,7 +10,7 @@ class Book extends Component{
     static propTypes = {
         book : PropTypes.object.isRequired,
         changeShelf : PropTypes.func.isRequired,
-        any_clicked : PropTypes.bool.isRequired,
+        anyClicked : PropTypes.bool.isRequired,
         bookClicked : PropTypes.func.isRequired,
     };
 
@@ -38,7 +38,7 @@ class Book extends Component{
     };
 
     render() {
-        const {book, any_clicked} = this.props;
+        const {book, anyClicked} = this.props;
         const {shelf} = this.state;
         const bookClassName = this.isClicked() ? 'book-cover-clicked' : 'book-cover';
         return (
@@ -49,7 +49,7 @@ class Book extends Component{
                             backgroundImage: `url("${book.imageLinks.smallThumbnail}")` }}>
 
                         </div>
-                        {!any_clicked &&
+                        {!anyClicked &&
                         <div className="book-shelf-changer">
                             <select onChange={this.changeSelectionShelf} value={shelf}>
                                 <option value="none" disabled>Move to...</option>

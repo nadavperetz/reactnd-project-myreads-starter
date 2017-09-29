@@ -9,9 +9,40 @@ import Spinner from '../Animation/Spinner'
 
 class BookShelf extends Component{
 
+    state = {
+        anyClicked: false,
+        clickedBooks: []
+    };
+
     static propTypes = {
-        books : PropTypes.object.isRequired,
-        changeShelf:  PropTypes.func.isRequired
+        books : PropTypes.array.isRequired,
+        changeShelf:  PropTypes.func.isRequired,
+    };
+
+    bookClicked = (book) => {
+        book.clicked =  (book.hasOwnProperty('clicked') ? !book.clicked : true) ;
+
+        let clickedBooks = this.state.clickedBooks;
+        let idx = clickedBooks.findIndex(eachBook => eachBook.id === book.id);
+
+        (idx >= 0) ? clickedBooks.splice(idx, 1) : clickedBooks.push(book);
+
+        if (clickedBooks.length > 0)
+            this.setState(
+                {
+                    anyClicked: true,
+                    clickedBooks: clickedBooks
+                }
+            );
+
+        else
+            this.setState(
+                {
+                    anyClicked: false,
+                    clickedBooks: clickedBooks
+                }
+            );
+
     };
 
     render() {
@@ -25,6 +56,8 @@ class BookShelf extends Component{
                                 <Book key={book.id}
                                       book={book}
                                       changeShelf={changeShelf}
+                                      anyClicked={this.state.anyClicked}
+                                      bookClicked={this.bookClicked}
                                 />)}
                         </ol>
                         :
