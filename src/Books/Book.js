@@ -29,7 +29,6 @@ class Book extends Component{
         else{
             clicked = false;
         }
-        console.log(clicked);
         return clicked;
     };
 

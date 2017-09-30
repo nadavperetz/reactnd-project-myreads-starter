@@ -75,7 +75,6 @@ class SearchBooks extends Component {
 
     render() {
         const {books, asyncRunning, anyClicked} = this.state;
-        console.log(asyncRunning);
         return (
             <div className="search-books">
                 <div className="search-books-bar">

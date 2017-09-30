@@ -22,10 +22,7 @@ class BookList extends Component {
     changeShelf = (book, new_shelf) => {
         BooksAPI.update(book, new_shelf).then((data) => {
             let old_books = this.state.books;
-            console.log(old_books);
-            console.log(book.id);
             const idx = old_books.findIndex(old_book => old_book.id === book.id);
-            console.log(idx);
             book.shelf = new_shelf;
             old_books[idx] = book;
             this.setState({books: old_books}

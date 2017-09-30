@@ -16,7 +16,6 @@ class BookDetail extends Component {
     getBook(){
         let bookId = this.props.match.params.bookID;
         BooksAPI.get(bookId).then((book) => {
-            console.log(book);
             this.setState({book: book})
         })
     }
