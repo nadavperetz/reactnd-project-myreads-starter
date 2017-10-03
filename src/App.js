@@ -11,12 +11,13 @@ class BooksApp extends React.Component {
     render() {
         return (
             <div className="app">
-                    <Route exact path="/" component={BookList}/>
-                    <Route exact path="/search/" component={SearchBooks} />
-                    <Route exact path="/detail/:bookID"  component={BookDetail}/>
+                <Route exact path="/" component={BookList}/>
+                <Route exact path="/search/" component={SearchBooks}/>
+                <Route exact path="/detail/:bookID" component={BookDetail}/>
 
             </div>
-        )}
+        )
+    }
 }
 
 export default BooksApp
