@@ -2,14 +2,14 @@ import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 import Spinner from '../Animation/Spinner'
 import * as BooksAPI from './API/BooksAPI'
-import Book from './Book'
 import sortBy from 'sort-by'
+
+import BookShelf from './BookShelf'
 
 class SearchBooks extends Component {
 
     state = {
         books: [],
-        clickedBooks: [],
         asyncRunning: false,
     };
 
@@ -22,37 +22,22 @@ class SearchBooks extends Component {
                     this.setState({asyncRunning: false, books: []})
                 }
                 else {
-                    data.sort(sortBy('name'));
                     this.setState({books: data, asyncRunning: false})
                 }
             })
         }
     };
 
-    addToShelf = (book, newShelf) => {
-        BooksAPI.update(book, newShelf).then( () => {
-            this.setState({books: this.state.books.filter((b) => b.id !== book.id)}
-            )
-        })
-    };
-
-    addSelectionToShelf = (e) => {
-        const newShelf = e.target.value;
-        this.setState({asyncRunning: true});
-        for (let clickedBook of this.state.clickedBooks) {
-            this.addToShelf(clickedBook, newShelf)
-        }
-        this.setState({asyncRunning: false});
-    };
-
-
-    bookClicked = (book) => {
-        console.log(book);
+    updateBooks = (books) => {
+        this.setState(
+            {books: books}
+        )
 
     };
 
     render() {
         const {books, asyncRunning} = this.state;
+        const showingBooks = books.filter((book) => book.shelf !== 'wantToRead').sort(sortBy('name'));
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -65,31 +50,14 @@ class SearchBooks extends Component {
                         />
                     </div>
                 </div>
-                <div className="search-books-results">
-                    {asyncRunning ?
-                        <Spinner/>
-                        :
-                        <ol className="books-grid">
-                            {books.map((book) =>
-                                <Book key={book.id}
-                                      book={book}
-                                      changeShelf={this.addToShelf}
-                                      bookClicked={this.bookClicked}
-                                />)
-                            }
-                        </ol>
-                    }
-                    {!asyncRunning &&
-                    <div className="move-on-batch">
-                        <select onChange={this.addSelectionToShelf} value='none'>
-                            <option value="none" disabled> </option>
-                            <option value="currentlyReading">Currently Reading</option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
-                        </select>
-                    </div>
-                    }
-                </div>
+                {asyncRunning ?
+                    <Spinner/>
+                    :
+                    <BookShelf shelf={'search'}
+                               books={showingBooks}
+                               isSearch={true}
+                               updateBooks={this.updateBooks}/>
+                }
             </div>
         )
     }

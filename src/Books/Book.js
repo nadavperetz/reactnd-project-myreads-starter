@@ -27,6 +27,7 @@ class Book extends Component {
     render() {
         const {book} = this.props;
         const {shelf} = this.state;
+        console.log(book);
         return (
             <li>
                 <div className='book'>

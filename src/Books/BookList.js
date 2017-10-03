@@ -20,33 +20,12 @@ class BookList extends Component {
         })
     }
 
-    changeShelf = (book, new_shelf) => {
-        BooksAPI.update(book, new_shelf).then((data) => {
-            let old_books = this.state.books;
-            const idx = old_books.findIndex(old_book => old_book.id === book.id);
-            book.shelf = new_shelf;
-            old_books[idx] = book;
-            this.setState({books: old_books}
-            )
-        })
+    updateBooks = (books) => {
+        this.setState(
+            {books: books}
+        )
+
     };
-
-    bookSelected = (checked, book)=>{
-        let old_books = this.state.selectedBooks;
-        const idx = old_books.findIndex(old_book => old_book.id === book.id);
-        // Remove
-        if (!checked && idx >= 0){
-            old_books.splice(idx, 1);
-        }
-        // Add
-        else if (checked && idx < 0){
-            old_books.push(book);
-
-        }
-        this.setState({selectedBooks: old_books});
-        console.log(this.state.selectedBooks);
-    };
-
 
     render() {
         const {books} = this.state;
@@ -65,19 +44,19 @@ class BookList extends Component {
                         </TabList>
 
                         <TabPanel>
-                            <BookShelf books={books.filter((book) => book.shelf === 'currentlyReading')}
-                                       bookSelected={this.bookSelected}
-                                       changeShelf={this.changeShelf}/>
+                            <BookShelf shelf={'currentlyReading'}
+                                       books={books}
+                                       updateBooks={this.updateBooks}/>
                         </TabPanel>
                         <TabPanel>
-                            <BookShelf books={books.filter((book) => book.shelf === 'wantToRead')}
-                                       bookSelected={this.bookSelected}
-                                       changeShelf={this.changeShelf}/>
+                            <BookShelf shelf={'wantToRead'}
+                                       books={books}
+                                       updateBooks={this.updateBooks}/>
                         </TabPanel>
                         <TabPanel>
-                            <BookShelf books={books.filter((book) => book.shelf === 'read')}
-                                       bookSelected={this.bookSelected}
-                                       changeShelf={this.changeShelf}/>
+                            <BookShelf shelf={'read'}
+                                       books={books}
+                                       updateBooks={this.updateBooks}/>
                         </TabPanel>
                     </Tabs>
                 </div>
