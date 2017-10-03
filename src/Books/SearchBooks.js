@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 import Spinner from '../Animation/Spinner'
-import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './API/BooksAPI'
 import Book from './Book'
 import sortBy from 'sort-by'
 
@@ -11,7 +11,6 @@ class SearchBooks extends Component {
         books: [],
         clickedBooks: [],
         asyncRunning: false,
-        anyClicked: false
     };
 
     inputKeyPressEvent = (event) => {
@@ -30,51 +29,30 @@ class SearchBooks extends Component {
         }
     };
 
-    changeShelf = (book, newShelf) => {
+    addToShelf = (book, newShelf) => {
         BooksAPI.update(book, newShelf).then( () => {
             this.setState({books: this.state.books.filter((b) => b.id !== book.id)}
             )
         })
     };
 
-    changeBatchSelectionShelf = (e) => {
+    addSelectionToShelf = (e) => {
         const newShelf = e.target.value;
         this.setState({asyncRunning: true});
         for (let clickedBook of this.state.clickedBooks) {
-            this.changeShelf(clickedBook, newShelf)
+            this.addToShelf(clickedBook, newShelf)
         }
         this.setState({asyncRunning: false});
     };
 
 
     bookClicked = (book) => {
-        book.clicked =  (book.hasOwnProperty('clicked') ? !book.clicked : true) ;
-
-        let clickedBooks = this.state.clickedBooks;
-        let idx = clickedBooks.findIndex(eachBook => eachBook.id === book.id);
-
-        (idx >= 0) ? clickedBooks.splice(idx, 1) : clickedBooks.push(book);
-
-        if (clickedBooks.length > 0)
-            this.setState(
-                {
-                    anyClicked: true,
-                    clickedBooks: clickedBooks
-                }
-            );
-
-        else
-            this.setState(
-                {
-                    anyClicked: false,
-                    clickedBooks: clickedBooks
-                }
-            );
+        console.log(book);
 
     };
 
     render() {
-        const {books, asyncRunning, anyClicked} = this.state;
+        const {books, asyncRunning} = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -95,16 +73,15 @@ class SearchBooks extends Component {
                             {books.map((book) =>
                                 <Book key={book.id}
                                       book={book}
-                                      changeShelf={this.changeShelf}
-                                      anyClicked={anyClicked}
+                                      changeShelf={this.addToShelf}
                                       bookClicked={this.bookClicked}
                                 />)
                             }
                         </ol>
                     }
-                    {(anyClicked && !asyncRunning) &&
+                    {!asyncRunning &&
                     <div className="move-on-batch">
-                        <select onChange={this.changeBatchSelectionShelf} value='none'>
+                        <select onChange={this.addSelectionToShelf} value='none'>
                             <option value="none" disabled> </option>
                             <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>

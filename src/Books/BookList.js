@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 
-import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './API/BooksAPI'
 import BookShelf from './BookShelf'
 
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
@@ -10,7 +10,8 @@ import sortBy from 'sort-by'
 class BookList extends Component {
 
     state = {
-        books: []
+        books: [],
+        selectedBooks: []
     };
 
     componentDidMount() {
@@ -28,6 +29,22 @@ class BookList extends Component {
             this.setState({books: old_books}
             )
         })
+    };
+
+    bookSelected = (checked, book)=>{
+        let old_books = this.state.selectedBooks;
+        const idx = old_books.findIndex(old_book => old_book.id === book.id);
+        // Remove
+        if (!checked && idx >= 0){
+            old_books.splice(idx, 1);
+        }
+        // Add
+        else if (checked && idx < 0){
+            old_books.push(book);
+
+        }
+        this.setState({selectedBooks: old_books});
+        console.log(this.state.selectedBooks);
     };
 
 
@@ -49,14 +66,17 @@ class BookList extends Component {
 
                         <TabPanel>
                             <BookShelf books={books.filter((book) => book.shelf === 'currentlyReading')}
+                                       bookSelected={this.bookSelected}
                                        changeShelf={this.changeShelf}/>
                         </TabPanel>
                         <TabPanel>
                             <BookShelf books={books.filter((book) => book.shelf === 'wantToRead')}
+                                       bookSelected={this.bookSelected}
                                        changeShelf={this.changeShelf}/>
                         </TabPanel>
                         <TabPanel>
                             <BookShelf books={books.filter((book) => book.shelf === 'read')}
+                                       bookSelected={this.bookSelected}
                                        changeShelf={this.changeShelf}/>
                         </TabPanel>
                     </Tabs>
