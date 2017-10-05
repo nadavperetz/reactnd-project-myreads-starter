@@ -3,7 +3,9 @@
     "escape-string-regexp": "latest",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
+    "react-bootstrap": "^0.31.3",
     "react-dom": "^15.5.4",
+    "react-icons": "^2.2.5",
     "react-router-dom": "latest",
     "react-tabs": "^2.0.0",
     "sort-by": "^1.2.0"
