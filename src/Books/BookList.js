@@ -11,7 +11,8 @@ class BookList extends Component {
 
     state = {
         books: [],
-        selectedBooks: []
+        selectedBooks: [],
+        anyBookSelected: false
     };
 
     componentDidMount() {
@@ -27,8 +28,14 @@ class BookList extends Component {
 
     };
 
+    isAnyBookSelected = (status) => {
+        this.setState(
+            {anyBookSelected: status}
+        )
+    }
+
     render() {
-        const {books} = this.state;
+        const {books, anyBookSelected} = this.state;
         books.sort(sortBy('name'));
         return (
             <div className="list-books">
@@ -46,24 +53,29 @@ class BookList extends Component {
                         <TabPanel>
                             <BookShelf shelf={'currentlyReading'}
                                        books={books}
+                                       isAnyBookSelected={this.isAnyBookSelected}
                                        updateBooks={this.updateBooks}/>
                         </TabPanel>
                         <TabPanel>
                             <BookShelf shelf={'wantToRead'}
                                        books={books}
+                                       isAnyBookSelected={this.isAnyBookSelected}
                                        updateBooks={this.updateBooks}/>
                         </TabPanel>
                         <TabPanel>
                             <BookShelf shelf={'read'}
                                        books={books}
+                                       isAnyBookSelected={this.isAnyBookSelected}
                                        updateBooks={this.updateBooks}/>
                         </TabPanel>
                     </Tabs>
                 </div>
-                <div className="open-search">
-                    <Link to="/search">Add a book</Link>
-                </div>
-            </div>
+                {!anyBookSelected &&
+                    <div className="open-search">
+                        <Link to="/search">Add a book</Link>
+                    </div>
+                }
+            </div>  
         )
     }
 }

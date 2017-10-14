@@ -35,9 +35,19 @@ class SearchBooks extends Component {
 
     };
 
+    isAnyBookSelected = (status) => {
+        this.setState(
+            {anyBookSelected: status}
+        )
+    }
+
     render() {
         const {books, asyncRunning} = this.state;
-        const showingBooks = books.filter((book) => book.shelf !== 'wantToRead').sort(sortBy('name'));
+        const showingBooks = books.filter((book) => book.shelf !== 'currentlyReading')
+                                  .filter((book) => book.shelf !== 'wantToRead')
+                                  .filter((book) => book.shelf !== 'read')
+                                  .sort(sortBy('name'));
+        console.log(showingBooks);
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -56,7 +66,8 @@ class SearchBooks extends Component {
                     <BookShelf shelf={'search'}
                                books={showingBooks}
                                isSearch={true}
-                               updateBooks={this.updateBooks}/>
+                               updateBooks={this.updateBooks}
+                               isAnyBookSelected={this.isAnyBookSelected}/>
                 }
             </div>
         )

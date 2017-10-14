@@ -28,7 +28,8 @@ class Book extends Component {
     render() {
         const {book} = this.props;
         const {shelf} = this.state;
-        console.log(book);
+        // Found a book without smallThumbnail...
+        const smallThumbnail = (book.imageLinks !== undefined) ? book.imageLinks.smallThumbnail : "";
         return (
             <li>
                 <div className='book'>
@@ -36,7 +37,7 @@ class Book extends Component {
                         <Link to={"detail/" + book.id}>
                             <div className='book-cover' style={{
                                 width: 128, height: 193,
-                                backgroundImage: `url("${book.imageLinks.smallThumbnail}")`
+                                backgroundImage: `url("${smallThumbnail}")`
                             }}>
 
                             </div>
@@ -54,7 +55,7 @@ class Book extends Component {
                     <div className="book-title">
                         <input type="checkbox" className="book-click-checkbox" id="check2"
                                onChange={this.bookSelected}/>
-                        {book.title}
+                        &nbsp;{book.title}
                     </div>
                     <div className="book-authors">{book.authors}</div>
                 </div>
