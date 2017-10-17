@@ -72,7 +72,7 @@ class BookList extends Component {
           </div>
           {!anyBookSelected &&
           <div className="open-search">
-            <Link to="/search">Add a book</Link>
+            <Link to="/search" shelfBooks={books}>Add a book</Link>
           </div>
           }
         </div>

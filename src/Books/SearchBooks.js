@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import Spinner from '../Animation/Spinner'
 import * as BooksAPI from './API/BooksAPI'
 
+import PropTypes from 'prop-types'
 import {DebounceInput} from 'react-debounce-input';
 import sortBy from 'sort-by'
 
@@ -10,24 +11,61 @@ import BookShelf from './BookShelf'
 
 class SearchBooks extends Component {
 
-  state = {
-    books: [],
-    asyncRunning: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      books: [],
+      shelfBooks: props.shelfBooks,
+      asyncRunning: false,
+    };
+  }
+
+  static propTypes = {
+    shelfBooks: PropTypes.array.isRequired,
+  };
+
+  componentDidMount() {
+    if (this.state.shelfBooks.length === 0) {
+      this.setState({asyncRunning: true});
+      BooksAPI.getAll().then((shelfBooks) => {
+        this.setState({
+          shelfBooks: shelfBooks,
+          asyncRunning: false
+        })
+      })
+    }
+  }
+
+  mergeBooksWithShelfBooks = (data) => {
+    let shelfBooks = this.state.shelfBooks;
+    let filteredBooks = [];
+    for (let book of data) {
+      let idx = shelfBooks.findIndex(shelfBook => shelfBook.id === book.id);
+      if (idx >= 0)
+        filteredBooks.push(shelfBooks[idx]);
+      else
+        filteredBooks.push(book);
+
+    }
+    return filteredBooks;
   };
 
 
   inputSearchEvent = (event) => {
     let query = event.target.value;
     if (query && !this.state.asyncRunning) {
-        this.setState({asyncRunning: true});
-        BooksAPI.search(query, 10).then((data) => {
-            if (data.error === "empty query") {
-                this.setState({asyncRunning: false, books: []})
-            }
-            else {
-                this.setState({books: data, asyncRunning: false})
-            }
-        })
+      this.setState({asyncRunning: true});
+      BooksAPI.search(query, 10).then((data) => {
+        if (data.error === "empty query") {
+          this.setState({asyncRunning: false, books: []})
+        }
+        else {
+          this.setState({
+            books: this.mergeBooksWithShelfBooks(data),
+            asyncRunning: false
+          })
+        }
+      })
     }
   };
 
@@ -46,10 +84,7 @@ class SearchBooks extends Component {
 
   render() {
     const {books, asyncRunning} = this.state;
-    const showingBooks = books.filter((book) => book.shelf !== 'currentlyReading')
-        .filter((book) => book.shelf !== 'wantToRead')
-        .filter((book) => book.shelf !== 'read')
-        .sort(sortBy('name'));
+    const showingBooks = books.sort(sortBy('name'));
     return (
         <div className="search-books">
           <div className="search-books-bar">

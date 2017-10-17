@@ -10,7 +10,7 @@ const BooksApp = () => {
   return (
       <div className="app">
         <Route exact path="/" component={BookList}/>
-        <Route exact path="/search/" component={SearchBooks}/>
+        <Route exact path="/search/"><SearchBooks shelfBooks={[]}/></Route>
         <Route exact path="/detail/:bookID" component={BookDetail}/>
       </div>
   )
