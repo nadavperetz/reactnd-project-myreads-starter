@@ -2,8 +2,9 @@
   "dependencies": {
     "escape-string-regexp": "latest",
     "prop-types": "^15.5.8",
-    "react": "^15.5.4",
+    "react": "^15.6.2",
     "react-bootstrap": "^0.31.3",
+    "react-debounce-input": "^3.1.0",
     "react-dom": "^15.5.4",
     "react-icons": "^2.2.5",
     "react-router-dom": "latest",
