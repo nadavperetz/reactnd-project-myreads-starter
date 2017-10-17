@@ -1,6 +1,6 @@
 # My Reads Project
 
-This is project is a Book Manager based on a starter template for the final assessment project for Udacity's React Fundamentals course, developed by [React Training](https://reacttraining.com).
+This is project is a Book Manager web app, based on a starter template for the final assessment project for Udacity's React Fundamentals course, developed by [React Training](https://reacttraining.com).
 
 
 # Quickstart
@@ -12,20 +12,21 @@ This is project is a Book Manager based on a starter template for the final asse
     
 ### Using
 
-/
+###### / (Main page)
+
 Able to see three bookshelves:
  * currentlyReading
  * wantToRead
  * Readings
 
-/search/
-Search for all books on the database
+###### /search/ (Search page) 
+Search for books
 
-/detail/:bookID
+###### /detail/:bookID
 
 View book details
 
- 
+OBS: In main and search pages, it's possible to move books in 'batch' using the checkboxes
 
     
 ### Contributing & Issues
