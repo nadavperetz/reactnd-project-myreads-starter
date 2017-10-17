@@ -1,6 +1,6 @@
 # My Reads Project
 
-This is project is a Book Manager web app, based on a starter template for the final assessment project for Udacity's React Fundamentals course, developed by [React Training](https://reacttraining.com).
+This project is a Book Manager web app, based on a starter template for the final assessment project for Udacity's React Fundamentals course, developed by [React Training](https://reacttraining.com).
 
 
 # Quickstart
