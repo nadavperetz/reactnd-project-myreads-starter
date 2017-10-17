@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom'
 import Spinner from '../Animation/Spinner'
 import * as BooksAPI from './API/BooksAPI'
 
-import PropTypes from 'prop-types'
 import {DebounceInput} from 'react-debounce-input';
 import sortBy from 'sort-by'
 
@@ -15,14 +14,10 @@ class SearchBooks extends Component {
     super(props);
     this.state = {
       books: [],
-      shelfBooks: props.shelfBooks,
+      shelfBooks: [],
       asyncRunning: false,
     };
   }
-
-  static propTypes = {
-    shelfBooks: PropTypes.array.isRequired,
-  };
 
   componentDidMount() {
     if (this.state.shelfBooks.length === 0) {
@@ -42,9 +37,10 @@ class SearchBooks extends Component {
     for (let book of data) {
       let idx = shelfBooks.findIndex(shelfBook => shelfBook.id === book.id);
       if (idx >= 0)
-        filteredBooks.push(shelfBooks[idx]);
-      else
-        filteredBooks.push(book);
+        book.shelf = shelfBooks[idx].shelf;
+      if (book.shelf === undefined)
+          book.shelf = 'none';
+      filteredBooks.push(book);
 
     }
     return filteredBooks;
@@ -60,8 +56,9 @@ class SearchBooks extends Component {
           this.setState({asyncRunning: false, books: []})
         }
         else {
+          const showingBooks = this.mergeBooksWithShelfBooks(data).sort(sortBy('name'));
           this.setState({
-            books: this.mergeBooksWithShelfBooks(data),
+            books: showingBooks,
             asyncRunning: false
           })
         }
@@ -69,9 +66,16 @@ class SearchBooks extends Component {
     }
   };
 
-  updateBooks = (books) => {
+  updateBook = (book) => {
+    let shelfBooks = this.state.shelfBooks;
+    let searchBooks = this.state.books;
+    let idx = shelfBooks.findIndex(old_book => old_book.id === book.id);
+    shelfBooks[idx] = book;
+    idx = searchBooks.findIndex(old_book => old_book.id === book.id);
+    searchBooks[idx] = book;
     this.setState(
-        {books: books}
+        {books: searchBooks,
+         shelfBooks: shelfBooks}
     )
 
   };
@@ -84,7 +88,6 @@ class SearchBooks extends Component {
 
   render() {
     const {books, asyncRunning} = this.state;
-    const showingBooks = books.sort(sortBy('name'));
     return (
         <div className="search-books">
           <div className="search-books-bar">
@@ -104,9 +107,9 @@ class SearchBooks extends Component {
               <Spinner/>
               :
               <BookShelf shelf={'search'}
-                         books={showingBooks}
+                         books={books}
                          isSearch={true}
-                         updateBooks={this.updateBooks}
+                         updateBook={this.updateBook}
                          isAnyBookSelected={this.isAnyBookSelected}/>
           }
         </div>

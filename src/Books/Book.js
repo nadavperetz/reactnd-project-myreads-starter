@@ -4,13 +4,6 @@ import {Link} from 'react-router-dom'
 
 class Book extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      shelf: this.props.book.shelf
-    };
-  }
-
   static propTypes = {
     book: PropTypes.object.isRequired,
     bookSelected: PropTypes.func.isRequired,
@@ -18,7 +11,7 @@ class Book extends Component {
   };
 
   changeSelectionShelf = (e) => {
-    if (e.target.value !== this.state.shelf) {
+    if (e.target.value !== this.props.book.shelf) {
       this.props.changeShelf(this.props.book, e.target.value)
     }
   };
@@ -30,8 +23,6 @@ class Book extends Component {
 
   render() {
     const {book} = this.props;
-    const {shelf} = this.state;
-    console.log(shelf);
     // Found a book without smallThumbnail...
     const smallThumbnail = (book.imageLinks !== undefined) ? book.imageLinks.smallThumbnail : "";
     return (
@@ -47,7 +38,7 @@ class Book extends Component {
                 </div>
               </Link>
               <div className="book-shelf-changer">
-                <select onChange={this.changeSelectionShelf} value={shelf}>
+                <select onChange={this.changeSelectionShelf} value={book.shelf}>
                   <option value="none" disabled>Move to...</option>
                   <option value="currentlyReading">Currently Reading</option>
                   <option value="wantToRead">Want to Read</option>

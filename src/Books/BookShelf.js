@@ -14,19 +14,16 @@ class BookShelf extends Component {
 
   static propTypes = {
     books: PropTypes.array.isRequired,
-    updateBooks: PropTypes.func.isRequired,
+    updateBook: PropTypes.func.isRequired,
     shelf: PropTypes.string.isRequired,
     isAnyBookSelected: PropTypes.func.isRequired
   };
 
 
   changeShelf = (book, new_shelf) => {
-    BooksAPI.update(book, new_shelf).then((data) => {
-      let old_books = this.props.books;
-      const idx = old_books.findIndex(old_book => old_book.id === book.id);
+    BooksAPI.update(book, new_shelf).then((_) => {
       book.shelf = new_shelf;
-      old_books[idx] = book;
-      this.props.updateBooks(old_books);
+      this.props.updateBook(book);
     })
   };
 

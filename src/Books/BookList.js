@@ -17,15 +17,18 @@ class BookList extends Component {
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
+      books.sort(sortBy('name'));
       this.setState({books: books})
     })
   }
 
-  updateBooks = (books) => {
+  updateBook = (book) => {
+    let old_books = this.state.books;
+    const idx = old_books.findIndex(old_book => old_book.id === book.id);
+    old_books[idx] = book;
     this.setState(
-        {books: books}
+        {books: old_books}
     )
-
   };
 
   isAnyBookSelected = (status) => {
@@ -36,7 +39,6 @@ class BookList extends Component {
 
   render() {
     const {books, anyBookSelected} = this.state;
-    books.sort(sortBy('name'));
     return (
         <div className="list-books">
           <div className="list-books-title">
@@ -54,25 +56,25 @@ class BookList extends Component {
                 <BookShelf shelf={'currentlyReading'}
                            books={books}
                            isAnyBookSelected={this.isAnyBookSelected}
-                           updateBooks={this.updateBooks}/>
+                           updateBook={this.updateBook}/>
               </TabPanel>
               <TabPanel>
                 <BookShelf shelf={'wantToRead'}
                            books={books}
                            isAnyBookSelected={this.isAnyBookSelected}
-                           updateBooks={this.updateBooks}/>
+                           updateBook={this.updateBook}/>
               </TabPanel>
               <TabPanel>
                 <BookShelf shelf={'read'}
                            books={books}
                            isAnyBookSelected={this.isAnyBookSelected}
-                           updateBooks={this.updateBooks}/>
+                           updateBook={this.updateBook}/>
               </TabPanel>
             </Tabs>
           </div>
           {!anyBookSelected &&
           <div className="open-search">
-            <Link to="/search" shelfBooks={books}>Add a book</Link>
+            <Link to="/search">Add a book</Link>
           </div>
           }
         </div>
